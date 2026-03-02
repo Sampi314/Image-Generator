@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, ChevronDown, ChevronUp, Image as ImageIcon, Play, AlertCircle, X, Download, Github, Maximize2, Archive } from 'lucide-react';
 import { enhancePrompt, generateImage } from '../services/geminiService';
+import { useApiKey } from './ApiKeyGate';
 import { GithubImportModal } from './GithubImportModal';
 import { ImageModal } from './ImageModal';
 import JSZip from 'jszip';
@@ -32,6 +33,7 @@ const SUGGESTED_STYLES = [
 ];
 
 export function BatchGenerator() {
+  const apiKey = useApiKey();
   const [items, setItems] = useState<PromptItemType[]>([
     {
       id: crypto.randomUUID(),
@@ -164,12 +166,12 @@ export function BatchGenerator() {
       
       if (!finalPrompt || item.status === 'error') {
         updateItem(id, { status: 'enhancing', error: undefined });
-        finalPrompt = await enhancePrompt(combinedPrompt);
+        finalPrompt = await enhancePrompt(combinedPrompt, apiKey);
         updateItem(id, { enhancedPrompt: finalPrompt });
       }
 
       updateItem(id, { status: 'generating', error: undefined });
-      const imageUrl = await generateImage(finalPrompt, item.referenceImages);
+      const imageUrl = await generateImage(finalPrompt, item.referenceImages, apiKey);
       
       updateItem(id, { 
         status: 'success', 
