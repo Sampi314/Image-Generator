@@ -1,0 +1,5 @@
+{
+  "name": "Batch Image Generator",
+  "description": "Batch generate high-quality images using Gemini 3.1 Pro for prompt enhancement and Gemini 3.1 Flash Image Preview for generation, with support for style anchors.",
+  "requestFramePermissions": []
+}
